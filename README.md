@@ -1,6 +1,10 @@
 # Node application on K8s
 
-Deploying a Docker web-app with terraform in a kubernetes cluster on GCP
+
+![enter image description here](https://user-images.githubusercontent.com/12648295/101995088-5e184100-3cbf-11eb-83b8-64f9e414f7ef.png)
+
+
+Deploying a Docker web-app with terraform in a Kubernetes cluster on GCP
 
 [![GitHub tag](https://img.shields.io/github/tag/tmknom/terraform-aws-alb.svg)](https://registry.terraform.io/modules/tmknom/alb/aws)
 [![License](https://img.shields.io/github/license/tmknom/terraform-aws-alb.svg)](https://opensource.org/licenses/MIT)
@@ -9,7 +13,7 @@ Deploying a Docker web-app with terraform in a kubernetes cluster on GCP
 
 - Terraform deployment
 - create a docker node app
-- Front-end nginx ingres
+- Front-end nginx ingress
 - Node app deployment
 - Monitoring
 - Chaos engineering
@@ -47,7 +51,7 @@ Terraform 0.12. Pin module version to ⇾ v2.0. Submit pull-requests to master b
 
 **Description**
 
-Terraform module which sets up an kubernetes cluster .
+Terraform module which sets up a Kubernetes cluster.
 
 The following resources are created:
 
@@ -59,9 +63,9 @@ The following resources are created:
    
 ## Requisites
  
- - A bucket to store the terraform state file 
+ - A bucket to store the Terraform state file 
  
- It can be created it graphically on the google cloud console or use the following code to create one:
+ It can be created it graphically on the Google cloud console or use the following code to create one:
  
 ```sh
 gsutil mb -p <project_name> -c regional -l <location> gs://<bucket_name>/
@@ -194,9 +198,9 @@ kubectl config current-context
 
 **Description**
 
-- Buidl and test the app
+- Build and test the app
 - Create a docker file and dockerize the app
-- Push the app into google container rigestry
+- Push the app into google container registry
 
 ## Building the app
 
@@ -234,7 +238,7 @@ create a index.html file with the following code
 </html>
 ```
 
-Create a server file server.js with the folowing code 
+Create a server file server.js with the following code 
 
   ```sh
 const express = require('express');
@@ -279,7 +283,10 @@ Test
 npm start
 ```
 
-In a browser, navigate to http://localhost:3000 and the app show runing localy 
+
+![enter image description here](https://user-images.githubusercontent.com/12648295/101994833-7f782d80-3cbd-11eb-92ff-605c4c412905.png)
+
+In a browser, navigate to http://localhost:3000 and the app show running locally 
 
 ## Create a Docker app
 
@@ -288,11 +295,11 @@ In a browser, navigate to http://localhost:3000 and the app show runing localy
 - Create Docker file
 - create Docker Image
 - Test image
-- Tag image and pushh to gcr
+- Tag image and push to gcr
 
 ## Docker file
 
-Create a file with the name Dockerfile to dockerize the app and put the following code
+Create a file with the name Docker file to dockerize the app and put the following code
 
 
   ```sh
@@ -315,7 +322,7 @@ ENTRYPOINT ["npm", "start"]
 **Note from sec consideration**
 
 alpine image allow us to keep our image size down
-we are including a non-root user that can use to avoid running your application container as root
+we are including a non-root user that can used to avoid running your application container as root
 
 
 Now, let’s build our image. Run:
@@ -324,17 +331,23 @@ Now, let’s build our image. Run:
 docker build -t node-app .
 ```
 
+![enter image description here](https://user-images.githubusercontent.com/12648295/101994820-696a6d00-3cbd-11eb-8c5c-1030f9af9632.png)
+
 To test the image run 
 
   ```sh
 docker run -p 3000:3000 node-app
 ```
 
+![enter image description here](https://user-images.githubusercontent.com/12648295/101994827-74250200-3cbd-11eb-9f65-fdc0b041d160.png)
+
 Navigating to http://localhost:3000 to show the app
+
+![enter image description here](https://user-images.githubusercontent.com/12648295/101994833-7f782d80-3cbd-11eb-92ff-605c4c412905.png)
 
 ## Tag the image and push it to GCR
 
-To tag the image we will use the followin syntax
+To tag the image we will use the following syntax
 
   ```sh
 docker tag <HOSTNAME>/<YOUR-PROJECT-ID>/<IMAGE-NAME>
@@ -346,7 +359,7 @@ docker tag node-app eu.gcr.io/<YOUR-PROJECT-ID>/nodeapp:v1
 
 ```
 
-Time to push the image to container regestry
+Time to push the image to container registry
   ```sh
 gcloud docker -- push <HOSTNAME>/<YOUR-PROJECT-ID/<IMAGE-NAME>
 
@@ -358,11 +371,13 @@ gcloud docker -- push eu.gcr.io/<YOUR-PROJECT-ID/nodeapp:v1
 
 ```
 
-## Font-end nginx ingres
+## Font-end nginx ingress
 
-Now we have our app on the container repo, lets log in into the k8s cluster to intall nginx ingress using helm chart
+Now we have our app on the container repo, lets log in into the k8s cluster to install nginx ingress using helm chart
 
-Seting up Nginx ingres via Helm
+![enter image description here](https://user-images.githubusercontent.com/12648295/101994812-59528d80-3cbd-11eb-9726-c110f3bf9807.png)
+
+Setting up Nginx ingress via Helm
 
   ```sh
 helm install nginx-ingress stable/nginx-ingress --set controller.publishService.enabled=true
@@ -370,7 +385,7 @@ helm install nginx-ingress stable/nginx-ingress --set controller.publishService.
 
 ```
 
-Lets check the ingress controler
+Let's check the ingress controller
 
   ```sh
 
@@ -477,11 +492,11 @@ spec:
 
 ```
 
-**Note**  security consideratios
+**Note**  security considerations
 
-we are runing the conainer as ano root user, we blcok root containers and preventing Linux binaries run as a priviledge user
+we are running the container as an root user, we block root containers and preventing Linux binaries run as a privilege user
 
-Lets deploy the app
+Let's deploy the app
 
   ```sh
 
@@ -489,14 +504,14 @@ kubectl apply --filename nodeapp.yaml
 
 ```
 
-test the conection
+test the connection
 
   ```sh
 
 kubectl get service nginx-ingress-controller
 
 ```
- navigate in the web browser uing the external ip
+ navigate in the web browser using the external IP
 
 
 # Demo
@@ -514,15 +529,61 @@ kubectl get service nginx-ingress-controller
 - Golden rules 
 
 
-## Prometheus and grafana
+## Prometheus and Grafana
 
-Prometheus and Grafana make it extremely easy to monitor just about any metric in your Kubernetes cluster it Shows overall cluster CPU / Memory / Filesystem usage as well as individual pod, containers, systemd services.
+Prometheus and Grafana make it extremely easy to monitor just about any metric in your Kubernetes cluster it shows overall cluster CPU / Memory / File system usage as well as individual pod, containers, system services.
+
+![enter image description here](https://user-images.githubusercontent.com/12648295/101994845-974fb180-3cbd-11eb-924e-44e930d97cf6.png)
 
 ## Weave Scope
 
 Is a great visualization and monitoring tool for your cluster, showing
 you a real-time map of your nodes, containers, and processes. 
 
+![enter image description here](https://user-images.githubusercontent.com/12648295/101994840-8a32c280-3cbd-11eb-83a1-0f4e45bb0afc.png)
+
+## Monitoring
+
+
+Google SRE book define 4 keys metric:
+Latency, Traffic, Errors, and Saturation
+ 
+ According to google SRE these four signals should be a critical to set  service level objectives (SLOs), since they are essential for delivering your service with high availability
+
+RED Method  for microservices are:
+Rate, Errors, and Duration
+
+For this propose I will focus on my personal super set:
+
+Rate: Number of requests, per second, you service are serving.
+Latency:  time it takes to send a request and get a response (Response time, queue/wait time in ms)
+Traffic: Number of request flowing across the network (
+Errors: Number of fail request per second (error rate)
+Saturation: The load on the network and server resources 
+Utilization: How  busy is the resource or system
+
+One of the reason we use those golden signals is to help up to identify problems, define SLA and SLO, quick troubleshooting, define and tuning the resources in order to get better performance to reduce tail, cost and make the resources more efficient an alerting when something goes wrong.
+
+Those golden signal are direct measurement of things that matters and directly affect the end user and the work producing parts of the system.
+
+##  Chaos engineering
+
+Imagine a monkey entering a data center, these farms of servers that host all the critical
+functions of our online activities. The monkey randomly rips cables, destroys devices....
+
+The only real way to veirfy aviliability is to kill one or more cluster nodes and see whats happens and this applys to kubernetes you can terminate a ramdom pod and see how kubernetes response and learn about how kubernetes behabes and learn about your production enviroment and chaos enginiring allow us to test the aviability and avoid desrupting production enviroments
+
+It importatn that chaos test in order to be more usefull needd to be automated and continiuos, runing again and in order to gin thist and coinfidence in the system and overcome weakness.
+
+Tools
+
+[Kubemonekey](https://github.com/asobti/kube-monkey)
+Build a pre set time and and builds a schedule of Deployments that will be targeted during the rest of the day, It randomly deletes Kubernetes (k8s) pods in the cluster encouraging and validating the development of failure-resilient services
+
+[PowerfulSeal](https://github.com/powerfulseal/powerfulseal)
+Opensource project that run in two modes interactive and autonomous, injects failure into your Kubernetes clusters, so that you can detect problems as early as possible.
+
+## CI/CD cirlceCI
 
 License.
 ----
