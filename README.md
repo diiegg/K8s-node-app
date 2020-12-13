@@ -17,13 +17,13 @@ Deploying a Docker web-app with terraform in a Kubernetes cluster on GCP
 - Node app deployment
 - Monitoring
 - Chaos engineering
-- CI/CD cirlceCI
+- CI/CD 
 
 ## Requisites
  
-- [GCP Account](https://aws.amazon.com)
+- GCP Account
 
-- [Terraform](https://learn.hashicorp.com/tutorials/terraform/install-cli)
+- Terraform
 - An existing VPC
 - Some existing subnets
 - GCP secret and public keys
@@ -192,9 +192,10 @@ Now confirm if the cluster set is correct by running
 kubectl config current-context
 ```
 
+Full terraform Code could be found [Here](https://github.com/diiegg/gcp-terraform-k8s)
 # Create a basic Docker node app
 
-## Note: For this demo we will use this app 
+## Note: Production version is using this  [app](https://github.com/diiegg/node-app)
 
 **Description**
 
@@ -535,6 +536,8 @@ Prometheus and Grafana make it extremely easy to monitor just about any metric i
 
 ![enter image description here](https://user-images.githubusercontent.com/12648295/101994845-974fb180-3cbd-11eb-924e-44e930d97cf6.png)
 
+[kube-prometheus](prometheus-community/kube-prometheus-stack)
+
 ## Weave Scope
 
 Is a great visualization and monitoring tool for your cluster, showing
@@ -542,7 +545,9 @@ you a real-time map of your nodes, containers, and processes.
 
 ![enter image description here](https://user-images.githubusercontent.com/12648295/101994840-8a32c280-3cbd-11eb-83a1-0f4e45bb0afc.png)
 
-## Monitoring
+[Weave](https://www.weave.works/oss/scope/)
+
+## Golden Rules
 
 
 Google SRE book define 4 keys metric:
@@ -550,7 +555,7 @@ Latency, Traffic, Errors, and Saturation
  
  According to google SRE these four signals should be a critical to set  service level objectives (SLOs), since they are essential for delivering your service with high availability
 
-RED Method  for microservices are:
+RED Method  for micro-services are:
 Rate, Errors, and Duration
 
 For this propose I will focus on my personal super set:
@@ -571,19 +576,86 @@ Those golden signal are direct measurement of things that matters and directly a
 Imagine a monkey entering a data center, these farms of servers that host all the critical
 functions of our online activities. The monkey randomly rips cables, destroys devices....
 
-The only real way to veirfy aviliability is to kill one or more cluster nodes and see whats happens and this applys to kubernetes you can terminate a ramdom pod and see how kubernetes response and learn about how kubernetes behabes and learn about your production enviroment and chaos enginiring allow us to test the aviability and avoid desrupting production enviroments
+The only real way to verify availability is to kill one or more cluster nodes and see whats happens and this apply to kubernetes you can terminate a random pod and see how kubernetes response and learn about how kubernetes behaves and learn about your production environment and chaos engineering allow us to test the viability and avoid disrupting production environments
 
-It importatn that chaos test in order to be more usefull needd to be automated and continiuos, runing again and in order to gin thist and coinfidence in the system and overcome weakness.
+It important that chaos test in order to be more useful needs to be automated and continuous, ruining again and again in order to win trust and confidence in the system and overcome weakness.
 
 Tools
 
 [Kubemonekey](https://github.com/asobti/kube-monkey)
-Build a pre set time and and builds a schedule of Deployments that will be targeted during the rest of the day, It randomly deletes Kubernetes (k8s) pods in the cluster encouraging and validating the development of failure-resilient services
+Build a pre-set time and and builds a schedule of Deployments that will be targeted during the rest of the day, It randomly deletes Kubernetes (k8s) pods in the cluster encouraging and validating the development of failure-resilient services
 
 [PowerfulSeal](https://github.com/powerfulseal/powerfulseal)
 Opensource project that run in two modes interactive and autonomous, injects failure into your Kubernetes clusters, so that you can detect problems as early as possible.
 
-## CI/CD cirlceCI
+# CI/CD 
+**Topic**
+
+In this section i will talk about how to create a production CI/CD
+
+The most common way to implement a CI/CD is unse a trunk based deployment model.
+
+In a trunk based environment all work is done in the same branch called trunk or master depending on the Version control System.
+
+The code is merged into trunk or master on regular basis, multiple times per day (CI). Then the trunk or master is updated and the work is deployed into the active environment to be tested (CD).
+
+To make this possible we need three factors:
+
+- Small, frequent commits reduce the scope of each
+-    integration   
+
+- Automated testing
+
+- Feature toggles
+
+## CI/CD workflows
+
+**Topic**
+we will take a look at a more concrete example walking through the workflow
+
+We need to take in consideration:
+
+- Version control for the code
+- Trunk based model
+- The code has been in deployment for a while and there is a version running in production.
+
+Steps
+
+1. Clone a copy of the source code and create a new branch
+2. Run the code locally
+3. Make code changes
+4. Submit changes for review
+5. Run automated tests
+6. Merge and release
+7. Deploy
+
+## Best practices
+
+- Use a VPC to lock down deploy server
+- Use minimal IAM permission for a deployment
+- Approval flows
+- Lock Down VCS systems
+- Keep pipelines fast
+- Make one way to deploy to prduction
+- Minimize the branching on the VCS
+
+A example of a production CD/CI could be found here:
+
+[CD/CI](https://github.com/diiegg/gkp-ci/tree/main)
+
+## SEC Considerations
+
+- Perform a dependency scanning
+- Perform a container scanning
+- Protect EP using a End Point protection platform
+- Perform a static application sec testing (SAST)
+- Perform a dynamic analysis sec testing (DAST)
+- Ensure runtime protection
+
+Tools
+
+[Snyk](https://snyk.io)
+
 
 License.
 ----
@@ -591,8 +663,9 @@ MIT
 
 # References.
 
-  
+  [Terraform](https://www.terraform.io/downloads.html)
+[Helm](https://helm.sh)
+[Kubernetes](https://kubernetes.io)
+[NginX ingress](https://www.nginx.com/products/nginx-ingress-controller/)
+[CirlceCI](https://circleci.com)
 
-- [Terraform AWS](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lb_listener)
-
-- [AWS  Load balancing](https://aws.amazon.com/elasticloadbalancing/getting-started/)
